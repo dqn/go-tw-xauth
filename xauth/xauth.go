@@ -105,7 +105,7 @@ func makeAuthorization(params map[string]string) string {
 	return "OAuth " + strings.Join(pairs, ", ")
 }
 
-func XAuth(consumerKey, consumerSecret, screenName, password string) (*XAuthResponse, error) {
+func Do(consumerKey, consumerSecret, screenName, password string) (*XAuthResponse, error) {
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 
 	oauth := map[string]string{
@@ -157,7 +157,7 @@ func XAuth(consumerKey, consumerSecret, screenName, password string) (*XAuthResp
 	}
 
 	q, err := url.ParseQuery(string(b))
-	if err != nil {
+	if len(q) != 5 {
 		err = fmt.Errorf("unknown error: %s", b)
 		return nil, err
 	}
