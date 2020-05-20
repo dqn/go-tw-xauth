@@ -47,3 +47,7 @@ screen name: XXXXX
 user id: XXXXXXXXXXXXXXXXXX
 xauth expires: 0
 ```
+
+## License
+
+MIT
