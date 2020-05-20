@@ -1,13 +1,14 @@
 language: go
 
 go:
-  - 1.8.x
-  - 1.9.x
-  - 1.10.x
-  - 1.11.x
-  - 1.12.x
-  - 1.13.x
   - 1.14.x
+
+env:
+  global:
+  - CK=CjulERsDeqhhjSme66ECg
+  - CS=IQWdVyqFxghAtURHGeGiWAsmCAGmdW3WmbEx6Hck
+  - secure: ZO36rBWPvnprlAaAJkgnB3b6Z17iWZbwe8faVASSCTqkDOAuUVtOm2uAYKgbP/Fd4AF47vzKIB5TmDgzQJfIlt7xmqYY5HSY7JRiG20EJzNAj80GMQ4TlTkJpaFh6t+OibsLyDadwjtImDTnGpt625ZguYRwt/dQxdWNoFj5P4r7jJzGAk97M281U7RvFHg3OKuexgKvjvlgLGINCIZAH6uYLkxcc66LWVtO0Io4kCXmhKcliNXbV2KQTbRDquof6x6W9Uu4hj5DwyKKIKPX77fn8w2olIwPsAvb4Zro5NC8q4v+N+utq23uPrsq+RbTbTCCtc7gc5FKpMvTCTcrchiGmZOsHwrBrHmfeVuKaLsT5L/W7peUN1tdpSNwgaVm41Oy+P7yPG4XS6EjLDhuqt8FOqfObg2qwzriKYyDtWREZYcHERKRZfECmHiFxnNz2fQpfycbwTw8GXsOrcQmLl24N1BQE2rY3oY4A8zrSZawyNeXofNMroGt3BYuNKPqJtQRzt+wL+5j+/PV4TO5NpzxTQ5VvPFzDukPKeSr+vEnU4WurPaSAmCynTBhP25ilxiYilVvsAh6ywaKJpoHnUPl4b0kWsy6zwcT1wutyavv3H6n/qH0S4kSfraFd8HlT57PaHCNDM1cZ/uoFe1uTdqgawP7TpjUd95WLfvcywQ=
+  - secure: WbVIgJ/1hTmiQux5biutHi7RQBnSU2QQ6sXWUgGIcyDuv5s9p5xd/RrSFh3ahV7MyDXJUX7RSbOVImvtRp3D/F1QgkoQpJJZkGSvoNylqSXojhGaSJUumQINeNwgLr9V0sBEMUCGNKuanEJT7anUhcnVKv/rctDGJhG0YcRhyRhkscIb0R2JdL4gnqU4VfbX4txKfSgtx0NnHoV0+9UOb27BUnPl0yxf2TJavwV6F6BQZXeLSU+AkPm0Yf69BJN9zi/yrregGpy+3f/HH9G5qdAAWE2Dx6HGH2j/gAGzr9twDvZVDZo9JG8GFEOMqD/TiONAsKwefcXKNeedKiPwGSWCl29YbJ1VhUrHZNYQ4Ob9rERDPjmYvEjP4rCOPTYyf62lXblw1dWIfPCUQsd1ZN5ISzndnT5x7ZWhbHX0tW6tGFu7VaeOQoI1R/UbqQo5unZrjXhd3v7Vk/2H2YSUBNDTr6RjK/DY2vqRnJevCpi53NUKaTx/hbg6nMLg9VwCxCWNQ+F9kNFnq6QhNtfLOoLp5S+YTqCiGXDCkctrgaJoSxJNh0vMOQMk2ws42P6Ks4yApOD5t/m/TyGc28voRcnuwJRV1ghuNWbrPV0VLGquK3TYAb5DANQ/NWqn62mkec2XuPt+H4mjmhD1xugriqYJY75NnRIPaTPGy7C4Js8=
 
 before_install:
   - go get -u github.com/haya14busa/goverage
