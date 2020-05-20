@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base64"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -14,10 +15,26 @@ import (
 	"time"
 )
 
+const endpoint = "https://api.twitter.com/oauth/access_token"
+
 type XAuthResponse struct {
+	OauthToken       string
+	OauthTokenSecret string
+	UserID           string
+	ScreenName       string
+	XAuthExpires     string
 }
 
-const endpoint = "https://api.twitter.com/oauth/access_token"
+type XAuthError struct {
+	Err struct {
+		Text string `xml:",chardata"`
+		Code string `xml:"code,attr"`
+	} `xml:"error"`
+}
+
+func (e *XAuthError) Error() string {
+	return fmt.Sprintf("code %s: %s", e.Err.Code, e.Err.Text)
+}
 
 func getKeys(m map[string]string) []string {
 	keys := make([]string, len(m))
@@ -134,7 +151,24 @@ func XAuth(consumerKey, consumerSecret, screenName, password string) (*XAuthResp
 		return nil, err
 	}
 
-	println(string(b))
+	var xe XAuthError
+	if xml.Unmarshal(b, &xe) == nil {
+		return nil, &xe
+	}
 
-	return nil, nil
+	q, err := url.ParseQuery(string(b))
+	if err != nil {
+		err = fmt.Errorf("unknown error: %s", b)
+		return nil, err
+	}
+
+	xr := XAuthResponse{
+		OauthToken:       q["oauth_token"][0],
+		OauthTokenSecret: q["oauth_token_secret"][0],
+		UserID:           q["user_id"][0],
+		ScreenName:       q["screen_name"][0],
+		XAuthExpires:     q["x_auth_expires"][0],
+	}
+
+	return &xr, nil
 }
