@@ -5,6 +5,8 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"sort"
 	"strconv"
@@ -53,10 +55,22 @@ func mergeMaps(a, b map[string]string) map[string]string {
 	return m
 }
 
-func makeOAuthSignature(method, endpoint string, params map[string]string) (string, error) {
-	ps := strings.Join(makePairs(`%s=%s`, params), "&")
+func buildQueryString(m map[string]string) string {
+	pairs := make([]string, len(m))
+	i := 0
+	for k, v := range m {
+		pairs[i] = k + "=" + url.QueryEscape(v)
+		i++
+	}
+	s := strings.Join(pairs, "&")
+
+	return s
+}
+
+func makeOAuthSignature(method, endpoint string, params map[string]string, consumerSecret string) (string, error) {
+	ps := strings.Join(makePairs("%s=%s", params), "&")
 	base := method + "&" + url.QueryEscape(endpoint) + "&" + url.QueryEscape(ps)
-	key := url.QueryEscape(params["oauth_consumer_key"]) + "&"
+	key := url.QueryEscape(consumerSecret) + "&"
 
 	h := hmac.New(sha1.New, []byte(key))
 	_, err := h.Write([]byte(base))
@@ -91,14 +105,36 @@ func XAuth(consumerKey, consumerSecret, screenName, password string) (*XAuthResp
 		"x_auth_username": screenName,
 	}
 
-	merged := mergeMaps(oauth, data)
-
-	sign, err := makeOAuthSignature("POST", endpoint, merged)
+	sign, err := makeOAuthSignature("POST", endpoint, mergeMaps(oauth, data), consumerSecret)
 	if err != nil {
 		return nil, err
 	}
 
-	println(sign)
+	oauth["oauth_signature"] = sign
+	token := makeAuthorization(oauth)
+
+	reader := strings.NewReader(buildQueryString(data))
+	req, err := http.NewRequest("POST", endpoint, reader)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", token)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	client := http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	println(string(b))
 
 	return nil, nil
 }
